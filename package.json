@@ -6,6 +6,8 @@
     "bloomer": "^0.6.2",
     "bulma": "^0.6.1",
     "halogen": "^0.2.0",
+    "lodash.orderby": "^4.6.0",
+    "lodash.sortby": "^4.7.0",
     "react": "^16.1.1",
     "react-autosuggest": "^9.3.2",
     "react-dom": "^16.1.1",

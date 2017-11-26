@@ -64,6 +64,11 @@ class App extends Component {
                 <option value="now_playing">Now Playing</option>
                 <option value="top_rated">Top Rate</option>
             </select>
+            <select onChange={this.onSortChanged.bind(this)} value={this.state.value}>
+                <option value="rating">Sort by rating</option>
+                <option value="popularity">Sort by Popularity</option>
+                <option value="release_date">Sort by release date</option>
+            </select>
             <InfiniteScroll loader={<h4>Loading...</h4>} next={this.next.bind(this)} hasMore={this.state.shouldLoadMore}>
               {content}
             </InfiniteScroll>
@@ -121,6 +126,45 @@ class App extends Component {
           shouldLoadMore : true,
           current_url : this.top_rate_url
         })
+        break;
+    }
+  }
+
+  onSortChanged(event){
+    var orderBy = require('lodash.orderby');
+    switch (event.target.value){
+      case "rating" :
+        let a = orderBy(this.state.movies, ['vote_average'], ['desc']);
+        this.setState({
+          originMovies : this.state.originMovies,
+          movies : a,
+          isLoading : this.state.isLoading,
+          page : this.state.page,
+          shouldLoadMore : this.state.page,
+          current_url : this.top_rate_url
+        })
+        break;
+      case "popularity":
+        let b = orderBy(this.state.movies, ['popularity'], ['desc']);
+        this.setState({
+          originMovies : this.state.originMovies,
+          movies : b,
+          isLoading : this.state.isLoading,
+          page : this.state.page,
+          shouldLoadMore : this.state.page,
+          current_url : this.top_rate_url
+        })
+        break;
+      case "release_date":
+      let c = orderBy(this.state.movies, ['release_date'], ['desc']);
+      this.setState({
+        originMovies : this.state.originMovies,
+        movies : c,
+        isLoading : this.state.isLoading,
+        page : this.state.page,
+        shouldLoadMore : this.state.page,
+        current_url : this.top_rate_url
+      })
         break;
     }
   }

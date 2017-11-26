@@ -3967,6 +3967,10 @@ lodash.memoize@^4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
 
+lodash.sortby:
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/lodash.sortby/-/lodash.sortby-4.7.0.tgz#edd14c824e2cc9c1e0b0a1b42bb5210516a42438"
+
 lodash.template@^4.4.0:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/lodash.template/-/lodash.template-4.4.0.tgz#e73a0385c8355591746e020b99679c690e68fba0"
@@ -5223,6 +5227,10 @@ react-filter-box@^2.0.0:
     react "^15.5.4"
     react-codemirror "^0.3.0"
     react-dom "^15.5.4"
+
+react-infinite-scroll-component@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/react-infinite-scroll-component/-/react-infinite-scroll-component-2.5.0.tgz#978b036577e1e8728882935f905a4685f2847ebe"
 
 react-scripts@1.0.17:
   version "1.0.17"
