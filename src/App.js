@@ -5,6 +5,7 @@ import { Container } from 'bloomer';
 import "bulma/css/bulma.css";
 import MoviesList from './MoviesList';
 import TEST_DATA from './test_json';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 class App extends Component { 
   
@@ -17,9 +18,8 @@ class App extends Component {
       movies : [],
       isLoading : true,
       api_key : "347085c63478d00dd3ba964029427ad7",
-      query : "Thor Ranak",
       page : "1",
-      shouldLoadMore : false
+      shouldLoadMore : true
     }
   }
 
@@ -28,15 +28,18 @@ class App extends Component {
   }
 
   async componentDidMount(){
-    const results = await fetch("https://api.themoviedb.org/3/movie/now_playing?api_key=" + this.state.api_key + "&query=" + this.state.query + "&page=" + this.state.page);
+    const results = await fetch("https://api.themoviedb.org/3/movie/now_playing?api_key=" + this.state.api_key + "&page=" + this.state.page);
     const data = await results.json();
     this.movies = data.results;
     await this.sleep(4000); 
     this.setState({
       originMovies : this.movies,
       movies : this.movies,
-      isLoading : false
+      isLoading : false,
+      page : "1",
+      shouldLoadMore : true
     })
+    // this.next = this.next.bind(this);
   }
 
   render() {
@@ -48,7 +51,7 @@ class App extends Component {
         <Spinner name='ball-clip-rotate-multiple' />
     ) : <MoviesList movies = {this.state.movies}/>;
     return (
-      // <Container>
+      <Container>
         <div className="App">
           <header className="App-header">
             <img src={logo} className="App-logo" alt="logo" />
@@ -56,23 +59,31 @@ class App extends Component {
           </header>
           <div className="App-intro">
             <input type="text" name="name" onChange = {(e) => this.onSearchBoxTextChanged(e.target.value)}/>
-            {content}
+            <InfiniteScroll loader={<h4>Loading...</h4>} next={this.next.bind(this)} hasMore={this.state.shouldLoadMore}>
+              {content}
+            </InfiniteScroll>
           </div>
         </div>
-      // </Container>
+      </Container>
     );
+  }
+
+  async next(){
+    const results = await fetch("https://api.themoviedb.org/3/movie/now_playing?api_key=" + this.state.api_key + "&page=" + (this.state.page + 1));
+    let data = await results.json();
+    this.movies = data.results;
+    await this.sleep(4000);
+    this.setState({
+      originMovies : this.state.originMovies.concat(this.movies),
+      movies : this.state.originMovies.concat(this.movies),
+      isLoading : false,
+      page : "1",
+      shouldLoadMore : true
+    })
   }
 
   onSearchBoxTextChanged(key){
     console.log(this.state.originMovies);
-    // let movies = this.state.originMovies.map( (t) => {
-    //   console.log(t);
-    //   let temp_title = t.title;
-    //   if (key.toString().indexOf(temp_title.toString().toLowerCase()) > -1) {
-    //     console.log("true");
-    //     return t;
-    //   }
-    // });
     let movies = [];
     this.state.originMovies.forEach(existedMovie => {
       if(existedMovie.title.indexOf(key) > -1){
@@ -80,14 +91,25 @@ class App extends Component {
       }
     });
     console.log(movies);
-    this.setState({
-      originMovies : this.state.originMovies,
-      movies : movies,
-      isLoading : this.state.isLoading,
-      api_key : this.state.api_key,
-      page : "1",
-      shouldLoadMore : this.state.shouldLoadMore
-    })
+    if (key == ""){
+      this.setState({
+        originMovies : this.state.originMovies,
+        movies : movies,
+        isLoading : this.state.isLoading,
+        api_key : this.state.api_key,
+        page : "1",
+        shouldLoadMore : true
+      })
+    } else {
+      this.setState({
+        originMovies : this.state.originMovies,
+        movies : movies,
+        isLoading : this.state.isLoading,
+        api_key : this.state.api_key,
+        page : "1",
+        shouldLoadMore : false
+      })
+    }
   }
 }
 export default App;
