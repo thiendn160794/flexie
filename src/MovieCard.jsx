@@ -5,10 +5,7 @@ import './MovieCard.css'
 export default class MovieCard extends Component {
     render() {
         return (
-            <div style = {MovieCard-Box}>
-            {this.props.movie.original_title}
-                {/* <Box className = "MovieCard-Box"> {this.props.movie.original_title}</Box> */}
-            </div>
+                <Box className = "MovieCard-Box"> {this.props.movie.original_title}</Box> 
         )
     }
 }
