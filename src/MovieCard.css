@@ -1,0 +1,7 @@
+.MovieCard-Box {
+    background-color: whitesmoke;
+    justify-content: 'center';
+    display: 'flex';
+    flex: '50%';
+    width: '50%'
+}

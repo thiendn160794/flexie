@@ -1,0 +1,63 @@
+import React, { Component } from 'react';
+import logo from './logo.svg';
+import './App.css';
+import { Container } from 'bloomer';
+import "bulma/css/bulma.css";
+import MoviesList from './MoviesList';
+import TEST_DATA from './test_json';
+
+class App extends Component { 
+  
+  constructor (props){
+    let NEW_PLAYING_URL = "https://api.themoviedb.org/3/movie/now_playing?api_key=347085c63478d00dd3ba964029427ad7&page=1";
+    let SEARCH_URL = "https://api.themoviedb.org/3/search/movie?api_key=347085c63478d00dd3ba964029427ad7&query=Jack+Reacher";
+    super(props);
+    this.state = {
+      movies : [],
+      isLoading : true,
+      api_key : "347085c63478d00dd3ba964029427ad7",
+      query : "Thor Ranak",
+      page : "1"
+    }
+  }
+
+  sleep(ms){
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  async componentDidMount(){
+    const results = await fetch("https://api.themoviedb.org/3/movie/now_playing?api_key=" + this.state.api_key + "&query=" + this.state.query + "&page=" + this.state.page);
+    const data = await results.json();
+    this.movies = data.results;
+    await this.sleep(4000); 
+    this.setState({
+      movies : this.movies,
+      isLoading : false
+    })
+  }
+
+  render() {
+    let content;
+    var Spinner = require('react-spinkit');
+    
+    content = this.state.isLoading ?
+    (
+        <Spinner name='ball-clip-rotate-multiple' />
+    ) : <MoviesList movies = {this.state.movies}/>;
+    return (
+      // <Container>
+        <div className="App">
+          <header className="App-header">
+            <img src={logo} className="App-logo" alt="logo" />
+            <h1 className="App-title">Welcome to React</h1>
+          </header>
+          <div className="App-intro">
+            {content}
+          </div>
+        </div>
+      // </Container>
+    );
+  }
+}
+
+export default App;
