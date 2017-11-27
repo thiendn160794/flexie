@@ -31,7 +31,7 @@ class App extends Component {
   }
 
   async componentDidMount(){
-    this.onFetchData();
+    this.onFetchData(this.now_playing_url);
   }
 
   render() {
@@ -74,7 +74,7 @@ class App extends Component {
                 <option value="release_date_desc">Sort by Release Date Desc</option>
             </select>
             <br/>
-            <Button onClick = {this.onFetchData.bind(this)}>Refresh</Button>
+            <Button onClick = {() => this.onFetchData(this.state.current_url)}>Refresh</Button>
             <InfiniteScroll next={this.next.bind(this)} hasMore={this.state.shouldLoadMore}
               loader={<h1 style={{height:'100px',clear:'both'}}><Spinner style = {{width:'100%', margin:'0 auto', top:'50%', left:'50%'}} name='ball-clip-rotate-multiple' /></h1>}>
               {content}
@@ -101,23 +101,25 @@ class App extends Component {
   async onSelectMode(event){
     switch (event.target.value){
       case "now_playing" :
-        this.current_url = this.now_playing_url;
+        this.onFetchData(this.now_playing_url);
         break;
       case "top_rated" :
-        this.current_url = this.top_rate_url;
+        this.onFetchData(this.top_rate_url);
         break;
     }
-    this.onFetchData();
   }
 
-  onFetchData(){
+  onFetchData(url){
+    if (url == null){
+      url = this.state.current_url;
+    }
     console.log("onFetachData");
-    console.log(this.state.current_url + "&api_key=" + this.api_key + "&page=1");
+    console.log(url + "&api_key=" + this.api_key + "&page=1");
     this.setState({
       isLoading : true,
       shouldLoadMore : false
     })
-    fetch(this.state.current_url + "&api_key=" + this.api_key + "&page=1")
+    fetch(url + "&api_key=" + this.api_key + "&page=1")
     .then( (response) => {
       return response.json()
     })
@@ -131,7 +133,7 @@ class App extends Component {
             isLoading : false,
             page : "1",
             shouldLoadMore : true,
-            current_url : this.now_playing_url,
+            current_url : url,
             key_search : "",
             sort_by : "none"
           });
