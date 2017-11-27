@@ -2,7 +2,7 @@
 
 **Flexie** is a movies app using the [The Movie Database API](http://docs.themoviedb.apiary.io/#).
 
-Time spent: **12** hours spent in total
+Time spent: **20** hours spent in total
 
 ## User Stories
 
@@ -27,16 +27,16 @@ The following **optional** features are implemented:
 
 The following **additional** features are implemented:
 
-- [x] Whenever user change between *New Playing* and *Top Rated* state of Filter/Sort will be reseted.
-- [x] Filter/Sort only change current list displayed movies.
-- [x] When user searching, display loadmore function.
+- [x] Whenever user change between *New Playing* and *Top Rated* mode, state of Filter/Sort will be reseted.
+- [x] Filter/Sort only apply on current displayed movies list.
+- [x] When user search (SearchBox has text), disable loadmore function.
 - [x] Data receive from loadmore function will be sort base on mode user picked before. 
 
 ## Video Walkthrough
 
 Here's a walkthrough of implemented user stories:
 
-<img src='http://i.imgur.com/link/to/your/gif/file.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='https://github.com/thiendn160794/flexie/blob/master/Flexiee.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
