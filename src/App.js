@@ -17,9 +17,11 @@ class App extends Component {
       originMovies : [],
       movies : [],
       isLoading : true,
-      page : "1",
-      shouldLoadMore : true,
-      current_url : this.now_playing_url
+      page : 1,
+      shouldLoadMore : false,
+      current_url : this.now_playing_url,
+      sort_by : "none",
+      key_search : "",
     }
   }
 
@@ -45,10 +47,15 @@ class App extends Component {
   render() {
     let content;
     var Spinner = require('react-spinkit');
-    
+    content = 
+    <div style = {{position : 'relative', height : '500px'}}>
+      <Spinner style = {{position : 'absolute', width:'100%', margin:'0 auto', top:'50%', left:'50%'}} name='ball-clip-rotate-multiple' />
+    </div>
     content = this.state.isLoading ?
     (
-        <Spinner name='ball-clip-rotate-multiple' />
+      <div style = {{position : 'relative', height : '500px'}}>
+        <Spinner style = {{position : 'absolute', width:'100%', margin:'0 auto', top:'50%', left:'50%', height:'500px'}} name='ball-clip-rotate-multiple' />
+      </div>
     ) : <MoviesList movies = {this.state.movies}/>;
     return (
       <Container>
@@ -65,11 +72,16 @@ class App extends Component {
                 <option value="top_rated">Top Rate</option>
             </select>
             <select onChange={this.onSortChanged.bind(this)} value={this.state.value}>
-                <option value="rating">Sort by rating</option>
-                <option value="popularity">Sort by Popularity</option>
-                <option value="release_date">Sort by release date</option>
+                <option value="none">None</option>
+                <option value="rating_asc">Sort by Rating Asc</option>
+                <option value="rating_desc">Sort by Rating Desc</option>
+                <option value="popularity_asc">Sort by Popularity Asc</option>
+                <option value="popularity_desc">Sort by Popularity Desc</option>
+                <option value="release_date_asc">Sort by Release Date Asc</option>
+                <option value="release_date_desc">Sort by Release Date Desc</option>
             </select>
-            <InfiniteScroll loader={<h4>Loading...</h4>} next={this.next.bind(this)} hasMore={this.state.shouldLoadMore}>
+            <InfiniteScroll next={this.next.bind(this)} hasMore={this.state.shouldLoadMore}
+              loader={<h1 style={{height:'100px',clear:'both'}}><Spinner style = {{width:'100%', margin:'0 auto', top:'50%', left:'50%'}} name='ball-clip-rotate-multiple' /></h1>}>
               {content}
             </InfiniteScroll>
           </div>
@@ -133,38 +145,81 @@ class App extends Component {
   onSortChanged(event){
     var orderBy = require('lodash.orderby');
     switch (event.target.value){
-      case "rating" :
-        let a = orderBy(this.state.movies, ['vote_average'], ['desc']);
+      case "none" :
         this.setState({
           originMovies : this.state.originMovies,
-          movies : a,
+          movies : this.state.originMovies,
           isLoading : this.state.isLoading,
           page : this.state.page,
           shouldLoadMore : this.state.page,
           current_url : this.top_rate_url
         })
         break;
-      case "popularity":
-        let b = orderBy(this.state.movies, ['popularity'], ['desc']);
+      case "rating_asc" :
+        let rating_asc = orderBy(this.state.movies, ['vote_average'], ['asc']);
         this.setState({
           originMovies : this.state.originMovies,
-          movies : b,
+          movies : rating_asc,
           isLoading : this.state.isLoading,
           page : this.state.page,
           shouldLoadMore : this.state.page,
           current_url : this.top_rate_url
         })
         break;
-      case "release_date":
-      let c = orderBy(this.state.movies, ['release_date'], ['desc']);
-      this.setState({
-        originMovies : this.state.originMovies,
-        movies : c,
-        isLoading : this.state.isLoading,
-        page : this.state.page,
-        shouldLoadMore : this.state.page,
-        current_url : this.top_rate_url
-      })
+      case "rating_desc" :
+        let rating_desc = orderBy(this.state.movies, ['vote_average'], ['desc']);
+        this.setState({
+          originMovies : this.state.originMovies,
+          movies : rating_desc,
+          isLoading : this.state.isLoading,
+          page : this.state.page,
+          shouldLoadMore : this.state.page,
+          current_url : this.top_rate_url
+        })
+        break;
+      case "popularity_asc":
+        let popularity_asc = orderBy(this.state.movies, ['popularity'], ['asc']);
+        this.setState({
+          originMovies : this.state.originMovies,
+          movies : popularity_asc,
+          isLoading : this.state.isLoading,
+          page : this.state.page,
+          shouldLoadMore : this.state.page,
+          current_url : this.top_rate_url
+        })
+        break;
+      case "popularity_desc":
+        let popularity_desc = orderBy(this.state.movies, ['popularity'], ['desc']);
+        this.setState({
+          originMovies : this.state.originMovies,
+          movies : popularity_desc,
+          isLoading : this.state.isLoading,
+          page : this.state.page,
+          shouldLoadMore : this.state.page,
+          current_url : this.top_rate_url
+        })
+        break;
+      case "release_date_asc":
+        let release_date_asc = orderBy(this.state.movies, ['release_date'], ['asc']);
+        this.setState({
+          originMovies : this.state.originMovies,
+          movies : release_date_asc,
+          isLoading : this.state.isLoading,
+          page : this.state.page,
+          shouldLoadMore : this.state.page,
+          current_url : this.top_rate_url
+        })
+        break;
+      case "release_date_desc":
+        let release_date_desc = orderBy(this.state.movies, ['release_date'], ['desc']);
+        this.setState({
+          originMovies : this.state.originMovies,
+          movies : release_date_desc,
+          isLoading : this.state.isLoading,
+          page : this.state.page,
+          shouldLoadMore : this.state.page,
+          current_url : this.top_rate_url
+        })
         break;
     }
   }

@@ -1186,7 +1186,7 @@ builtin-status-codes@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/builtin-status-codes/-/builtin-status-codes-3.0.0.tgz#85982878e21b98e1c66425e03d0174788f569ee8"
 
-bulma:
+bulma, bulma@^0.6.0:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/bulma/-/bulma-0.6.1.tgz#5f21a77c0c06f7d80051c06628c23516081bd649"
 
@@ -3967,6 +3967,10 @@ lodash.memoize@^4.1.2:
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/lodash.memoize/-/lodash.memoize-4.1.2.tgz#bcc6c49a42a2840ed997f323eada5ecd182e0bfe"
 
+lodash.orderby@^4.6.0:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/lodash.orderby/-/lodash.orderby-4.6.0.tgz#e697f04ce5d78522f54d9338b32b81a3393e4eb3"
+
 lodash.sortby:
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/lodash.sortby/-/lodash.sortby-4.7.0.tgz#edd14c824e2cc9c1e0b0a1b42bb5210516a42438"
@@ -5205,7 +5209,7 @@ react-dom@^15.5.4:
     object-assign "^4.1.0"
     prop-types "^15.5.10"
 
-react-dom@^16.1.1:
+react-dom@^16.0.0, react-dom@^16.1.1:
   version "16.1.1"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.1.1.tgz#b2e331b6d752faf1a2d31399969399a41d8d45f8"
   dependencies:
@@ -5306,7 +5310,7 @@ react@^15.5.4:
     object-assign "^4.1.0"
     prop-types "^15.5.10"
 
-react@^16.1.1:
+react@^16.0.0, react@^16.1.1:
   version "16.1.1"
   resolved "https://registry.yarnpkg.com/react/-/react-16.1.1.tgz#d5c4ef795507e3012282dd51261ff9c0e824fe1f"
   dependencies:
@@ -5314,6 +5318,16 @@ react@^16.1.1:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.0"
+
+reactbulma:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/reactbulma/-/reactbulma-1.1.1.tgz#4410ea53ec6e46e1c66660c1eb8eacaaabe64776"
+  dependencies:
+    bulma "^0.6.0"
+    classnames "^2.2.5"
+    prop-types "^15.6.0"
+    react "^16.0.0"
+    react-dom "^16.0.0"
 
 read-all-stream@^3.0.0:
   version "3.1.0"

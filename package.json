@@ -12,10 +12,12 @@
     "react-autosuggest": "^9.3.2",
     "react-dom": "^16.1.1",
     "react-filter-box": "^2.0.0",
+    "react-images": "^0.5.11",
     "react-infinite-scroll-component": "^2.5.0",
     "react-scripts": "1.0.17",
     "react-search-box": "0.0.6",
-    "react-spinkit": "^3.0.0"
+    "react-spinkit": "^3.0.0",
+    "reactbulma": "^1.1.1"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -19,10 +19,10 @@ The following **required** functionality is completed:
 The following **optional** features are implemented:
 
 - [x] Toggle between **Now Playing** and **Top Rated** movies.
-- [ ] Sort Movies by rating, popularity, release date.
+- [x] Sort Movies by rating, popularity, release date.
 - [ ] Animations on open/close details.
 - [x] Infinite Scrolling.
-- [ ] Movie Poster Lightbox on click
+- [x] Movie Poster Lightbox on click
 - [ ] Multiple Layout Options
 
 The following **additional** features are implemented:
