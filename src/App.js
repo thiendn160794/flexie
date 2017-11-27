@@ -30,32 +30,58 @@ class App extends Component {
   }
 
   async componentDidMount(){
-    const results = await fetch(this.now_playing_url + "&api_key=" + this.api_key + "&page=" + this.state.page);
-    const data = await results.json();
-    this.movies = data.results;
-    await this.sleep(4000); 
-    this.setState({
-      originMovies : this.movies,
-      movies : this.movies,
-      isLoading : false,
-      page : "1",
-      shouldLoadMore : true,
-      current_url : this.now_playing_url
-    })
+    // const results = await 
+          fetch(this.now_playing_url + "&api_key=" + this.api_key + "&page=" + this.state.page)
+          .then( (response) => {
+            return response.json()
+          })
+          .then( (data) => {
+            let myData = data;
+            this.setState({
+              originMovies : myData.results,
+              movies : myData.results,
+              isLoading : false,
+              page : "1",
+              shouldLoadMore : true,
+              current_url : this.now_playing_url
+            })
+          })
+          .catch ( (ex) => {
+              console.log("onCatch"),
+              this.setState({
+                isError : true
+              })
+            }
+          )
+    // console.log(results);
+    // const data = await results.json();
+    // this.movies = data.results;
+    // await this.sleep(4000); 
+    // this.setState({
+    //   originMovies : this.movies,
+    //   movies : this.movies,
+    //   isLoading : false,
+    //   page : "1",
+    //   shouldLoadMore : true,
+    //   current_url : this.now_playing_url
+    // })
   }
 
   render() {
     let content;
     var Spinner = require('react-spinkit');
-    content = 
-    <div style = {{position : 'relative', height : '500px'}}>
-      <Spinner style = {{position : 'absolute', width:'100%', margin:'0 auto', top:'50%', left:'50%'}} name='ball-clip-rotate-multiple' />
-    </div>
     content = this.state.isLoading ?
-    (
-      <div style = {{position : 'relative', height : '500px'}}>
-        <Spinner style = {{position : 'absolute', width:'100%', margin:'0 auto', top:'50%', left:'50%', height:'500px'}} name='ball-clip-rotate-multiple' />
-      </div>
+    ( this.state.isError ?
+      (
+        <div style = {{position : 'relative', height : '500px', alignContent : "center", alignItems : 'center'}}>
+          <h2  >Check your internet then try again!</h2>
+        </div>
+      ) :
+      (
+        <div style = {{position : 'relative', height : '500px'}}>
+          <Spinner style = {{position : 'absolute', width:'100%', margin:'0 auto', top:'50%', left:'50%', height:'500px'}} name='ball-clip-rotate-multiple' />
+        </div>
+      )
     ) : <MoviesList movies = {this.state.movies}/>;
     return (
       <Container>

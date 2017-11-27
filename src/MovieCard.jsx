@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import {Box} from 'bloomer'
 import './MovieCard.css'
-import {Media, Image, Content, Level, Icon} from 'reactbulma'
+import {Media, Image, Content, Level, Message} from 'reactbulma'
 import Lightbox from 'react-images';
+import ReactDOM from 'react-dom'
+import {Icon} from 'react-fa'
 
 export default class MovieCard extends Component {
 
@@ -40,7 +42,12 @@ export default class MovieCard extends Component {
     }
 
     render() {
-        let detail = this.state.shouldShowDetail ? this.props.movie.overview : null;
+        let detail = this.state.shouldShowDetail ? 
+        (<Message success style = {{maxHeight : "100%"}}>
+            <Message.Body>
+                {this.props.movie.overview}
+            </Message.Body>
+        </Message>) : null;
         return (
             <div style = {{display: 'flex',height:"300px",float:'left',width:'50%',margin:'10px 0px',justifyContent:'center'}}>
                 <Lightbox backdropClosesModal = {true} 
@@ -48,7 +55,6 @@ export default class MovieCard extends Component {
                     images = {this.urlLightBox}  
                     onClose = {this.onCloseLightBox.bind(this)}/>
                 <Box style = {{flex : '0.9'}} className = "MovieCard-Box"> 
-                {/* {this.props.movie.original_title} */}
                     <Media>
                         <Media.Left style = {{flex : '1'}}>
                             <img style = {{height : '100%', width : '100%'}} 
@@ -57,20 +63,18 @@ export default class MovieCard extends Component {
                                 onClick = {this.onClickPosterImage.bind(this)}/>
                         </Media.Left>
                         <Media.Content style = {{flex : '2'}}>
-                            <Content>
+                            <Content style = {{flex : '1'}}>
                                 <p>
                                     <strong>{this.props.movie.original_title}</strong> 
                                     <br/>
-                                    Rating: <small>{this.props.movie.vote_average}</small>
+                                    <Icon name="star" /> <small>{this.props.movie.vote_average}</small>
                                     <br/>
-                                    Release Date: <small>{this.props.movie.release_date}</small> 
-                                    <br/>
-                                    Popularity: <small>{this.props.movie.popularity}</small> 
+                                    <Icon name="calendar" /> <small>{this.props.movie.release_date}</small> 
                                     <br/>
                                     <small><a onClick={this.onShowClick.bind(this)}>Detail</a></small>
                                 </p>
                             </Content>
-                            <Content >
+                            <Content style = {{flex : '1'}}>
                                 {detail}
                             </Content>
                         </Media.Content>
