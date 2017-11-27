@@ -27,7 +27,10 @@ The following **optional** features are implemented:
 
 The following **additional** features are implemented:
 
-- [ ] List anything else that you can get done to improve the app functionality!
+- [x] Whenever user change between *New Playing* and *Top Rated* state of Filter/Sort will be reseted.
+- [x] Filter/Sort only change current list displayed movies.
+- [x] When user searching, display loadmore function.
+- [x] Data receive from loadmore function will be sort base on mode user picked before. 
 
 ## Video Walkthrough
 

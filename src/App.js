@@ -32,30 +32,6 @@ class App extends Component {
 
   async componentDidMount(){
     this.onFetchData();
-    // const results = await 
-    // fetch(this.now_playing_url + "&api_key=" + this.api_key + "&page=" + this.state.page)
-    // .then( (response) => {
-    //   return response.json()
-    // })
-    // .then( (data) => {
-    //   let myData = data;
-    //   this.setState({
-    //     originMovies : myData.results,
-    //     movies : myData.results,
-    //     isLoading : false,
-    //     page : "1",
-    //     shouldLoadMore : true,
-    //     current_url : this.now_playing_url,
-    //     sort_by : this.state.sort_by,
-    //     key_search : this.state.key_search
-    //   })
-    // })
-    // .catch ( (ex) => {
-    //     this.setState({
-    //       isError : true
-    //     })
-    //   }
-    // )
   }
 
   render() {
@@ -110,18 +86,16 @@ class App extends Component {
   }
 
   async next(){
+    console.log(this.state.current_url + "&api_key=" + this.api_key + "&page=" + (parseInt(this.state.page) + 1))
     const results = await fetch(this.state.current_url + "&api_key=" + this.api_key + "&page=" + (this.state.page + 1));
     let data = await results.json();
     this.movies = data.results;
     await this.sleep(4000);
     this.setState({
       originMovies : this.state.originMovies.concat(this.movies),
-      movies : this.state.originMovies.concat(this.movies),
-      isLoading : false,
       page : parseInt(this.state.page) + 1,
-      shouldLoadMore : true,
-      current_url : this.state.current_url
     })
+    this.buildData(this.state.key_search, this.state.sort_by);
   }
 
   async onSelectMode(event){
@@ -204,7 +178,7 @@ class App extends Component {
             isLoading : this.state.isLoading,
             page : this.state.page,
             shouldLoadMore : true,
-            current_url : this.top_rate_url,
+            current_url : this.state.current_url,
             sort_by : sort,
             key_search : key
           })
@@ -243,7 +217,7 @@ class App extends Component {
             isLoading : this.state.isLoading,
             page : this.state.page,
             shouldLoadMore : true,
-            current_url : this.current_url,
+            current_url : this.state.current_url,
             sort_by : sort,
             key_search : key
           })
