@@ -5,6 +5,7 @@ import { Container } from 'bloomer';
 import "bulma/css/bulma.css";
 import MoviesList from './MoviesList';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { Input, Button } from 'reactbulma'
 
 class App extends Component { 
   
@@ -30,41 +31,31 @@ class App extends Component {
   }
 
   async componentDidMount(){
+    this.onFetchData();
     // const results = await 
-          fetch(this.now_playing_url + "&api_key=" + this.api_key + "&page=" + this.state.page)
-          .then( (response) => {
-            return response.json()
-          })
-          .then( (data) => {
-            let myData = data;
-            this.setState({
-              originMovies : myData.results,
-              movies : myData.results,
-              isLoading : false,
-              page : "1",
-              shouldLoadMore : true,
-              current_url : this.now_playing_url
-            })
-          })
-          .catch ( (ex) => {
-              console.log("onCatch"),
-              this.setState({
-                isError : true
-              })
-            }
-          )
-    // console.log(results);
-    // const data = await results.json();
-    // this.movies = data.results;
-    // await this.sleep(4000); 
-    // this.setState({
-    //   originMovies : this.movies,
-    //   movies : this.movies,
-    //   isLoading : false,
-    //   page : "1",
-    //   shouldLoadMore : true,
-    //   current_url : this.now_playing_url
+    // fetch(this.now_playing_url + "&api_key=" + this.api_key + "&page=" + this.state.page)
+    // .then( (response) => {
+    //   return response.json()
     // })
+    // .then( (data) => {
+    //   let myData = data;
+    //   this.setState({
+    //     originMovies : myData.results,
+    //     movies : myData.results,
+    //     isLoading : false,
+    //     page : "1",
+    //     shouldLoadMore : true,
+    //     current_url : this.now_playing_url,
+    //     sort_by : this.state.sort_by,
+    //     key_search : this.state.key_search
+    //   })
+    // })
+    // .catch ( (ex) => {
+    //     this.setState({
+    //       isError : true
+    //     })
+    //   }
+    // )
   }
 
   render() {
@@ -78,7 +69,7 @@ class App extends Component {
         </div>
       ) :
       (
-        <div style = {{position : 'relative', height : '500px'}}>
+        <div style = {{position : 'relative', height : '400px'}}>
           <Spinner style = {{position : 'absolute', width:'100%', margin:'0 auto', top:'50%', left:'50%', height:'500px'}} name='ball-clip-rotate-multiple' />
         </div>
       )
@@ -92,12 +83,12 @@ class App extends Component {
             
           </header>
           <div className="App-intro">
-            <input type="text" name="name" onChange = {(e) => this.onSearchBoxTextChanged(e.target.value)}/>
-            <select onChange={this.onSelectMode.bind(this)} value={this.state.value}>
+            <Input placeholder="Search by title..."  value = {this.state.key_search} onChange = {(e) => this.onSearchBoxTextChanged(e.target.value)}/>
+            <select onChange={this.onSelectMode.bind(this)}>
                 <option value="now_playing">Now Playing</option>
                 <option value="top_rated">Top Rate</option>
             </select>
-            <select onChange={this.onSortChanged.bind(this)} value={this.state.value}>
+            <select onChange={this.onSortChanged.bind(this)} value={this.state.sort_by}>
                 <option value="none">None</option>
                 <option value="rating_asc">Sort by Rating Asc</option>
                 <option value="rating_desc">Sort by Rating Desc</option>
@@ -106,6 +97,8 @@ class App extends Component {
                 <option value="release_date_asc">Sort by Release Date Asc</option>
                 <option value="release_date_desc">Sort by Release Date Desc</option>
             </select>
+            <br/>
+            <Button onClick = {this.onFetchData.bind(this)}>Refresh</Button>
             <InfiniteScroll next={this.next.bind(this)} hasMore={this.state.shouldLoadMore}
               loader={<h1 style={{height:'100px',clear:'both'}}><Spinner style = {{width:'100%', margin:'0 auto', top:'50%', left:'50%'}} name='ball-clip-rotate-multiple' /></h1>}>
               {content}
@@ -132,126 +125,68 @@ class App extends Component {
   }
 
   async onSelectMode(event){
+    switch (event.target.value){
+      case "now_playing" :
+        this.current_url = this.now_playing_url;
+        break;
+      case "top_rated" :
+        this.current_url = this.top_rate_url;
+        break;
+    }
+    this.onFetchData();
+  }
+
+  onFetchData(){
+    console.log("onFetachData");
+    console.log(this.state.current_url + "&api_key=" + this.api_key + "&page=1");
     this.setState({
       isLoading : true,
       shouldLoadMore : false
     })
-    switch (event.target.value){
-      case "now_playing" :
-        const results = await fetch(this.now_playing_url + "&api_key=" + this.api_key + "&page=" + 1);
-        const data = await results.json();
-        this.movies = data.results;
-        await this.sleep(4000); 
+    fetch(this.state.current_url + "&api_key=" + this.api_key + "&page=1")
+    .then( (response) => {
+      return response.json()
+    })
+    .then( (data) => {
+      setTimeout(
+        function(){
+          let myData = data;
+          this.setState({
+            originMovies : myData.results,
+            movies : myData.results,
+            isLoading : false,
+            page : "1",
+            shouldLoadMore : true,
+            current_url : this.now_playing_url,
+            key_search : "",
+            sort_by : "none"
+          });
+        }.bind(this),
+        4000
+      );
+    })
+    .catch ( (ex) => {
         this.setState({
-          originMovies : this.movies,
-          movies : this.movies,
-          isLoading : false,
-          page : 1,
-          shouldLoadMore : true,
-          current_url : this.now_playing_url
+          isError : true
         })
-        break;
-      case "top_rated" :
-        const results1 = await fetch(this.top_rate_url + "&api_key=" + this.api_key + "&page=" + 1);
-        const data1 = await results1.json();
-        this.movies = data1.results;
-        await this.sleep(4000); 
-        this.setState({
-          originMovies : this.movies,
-          movies : this.movies,
-          isLoading : false,
-          page : 1,
-          shouldLoadMore : true,
-          current_url : this.top_rate_url
-        })
-        break;
-    }
+      }
+    )
   }
 
   onSortChanged(event){
-    var orderBy = require('lodash.orderby');
-    switch (event.target.value){
-      case "none" :
-        this.setState({
-          originMovies : this.state.originMovies,
-          movies : this.state.originMovies,
-          isLoading : this.state.isLoading,
-          page : this.state.page,
-          shouldLoadMore : this.state.page,
-          current_url : this.top_rate_url
-        })
-        break;
-      case "rating_asc" :
-        let rating_asc = orderBy(this.state.movies, ['vote_average'], ['asc']);
-        this.setState({
-          originMovies : this.state.originMovies,
-          movies : rating_asc,
-          isLoading : this.state.isLoading,
-          page : this.state.page,
-          shouldLoadMore : this.state.page,
-          current_url : this.top_rate_url
-        })
-        break;
-      case "rating_desc" :
-        let rating_desc = orderBy(this.state.movies, ['vote_average'], ['desc']);
-        this.setState({
-          originMovies : this.state.originMovies,
-          movies : rating_desc,
-          isLoading : this.state.isLoading,
-          page : this.state.page,
-          shouldLoadMore : this.state.page,
-          current_url : this.top_rate_url
-        })
-        break;
-      case "popularity_asc":
-        let popularity_asc = orderBy(this.state.movies, ['popularity'], ['asc']);
-        this.setState({
-          originMovies : this.state.originMovies,
-          movies : popularity_asc,
-          isLoading : this.state.isLoading,
-          page : this.state.page,
-          shouldLoadMore : this.state.page,
-          current_url : this.top_rate_url
-        })
-        break;
-      case "popularity_desc":
-        let popularity_desc = orderBy(this.state.movies, ['popularity'], ['desc']);
-        this.setState({
-          originMovies : this.state.originMovies,
-          movies : popularity_desc,
-          isLoading : this.state.isLoading,
-          page : this.state.page,
-          shouldLoadMore : this.state.page,
-          current_url : this.top_rate_url
-        })
-        break;
-      case "release_date_asc":
-        let release_date_asc = orderBy(this.state.movies, ['release_date'], ['asc']);
-        this.setState({
-          originMovies : this.state.originMovies,
-          movies : release_date_asc,
-          isLoading : this.state.isLoading,
-          page : this.state.page,
-          shouldLoadMore : this.state.page,
-          current_url : this.top_rate_url
-        })
-        break;
-      case "release_date_desc":
-        let release_date_desc = orderBy(this.state.movies, ['release_date'], ['desc']);
-        this.setState({
-          originMovies : this.state.originMovies,
-          movies : release_date_desc,
-          isLoading : this.state.isLoading,
-          page : this.state.page,
-          shouldLoadMore : this.state.page,
-          current_url : this.top_rate_url
-        })
-        break;
-    }
+    console.log(event.target.value);
+    this.buildData(this.state.key_search, event.target.value);
   }
 
   onSearchBoxTextChanged(key){
+    console.log(key);
+    this.buildData(key, this.state.sort_by);
+  }
+
+  buildData(key, sort){
     console.log(this.state.originMovies);
+    console.log(key);
+    console.log(sort);
     let movies = [];
     this.state.originMovies.forEach(existedMovie => {
       if(existedMovie.title.toLowerCase().indexOf(key.toLowerCase()) > -1){
@@ -259,24 +194,193 @@ class App extends Component {
       }
     });
     console.log(movies);
+    var orderBy = require('lodash.orderby');
     if (key == ""){
-      this.setState({
-        originMovies : this.state.originMovies,
-        movies : movies,
-        isLoading : this.state.isLoading,
-        api_key : this.state.api_key,
-        page : "1",
-        shouldLoadMore : true
-      })
+      switch (sort){
+        case "none" :
+          this.setState({
+            originMovies : this.state.originMovies,
+            movies : movies,
+            isLoading : this.state.isLoading,
+            page : this.state.page,
+            shouldLoadMore : true,
+            current_url : this.top_rate_url,
+            sort_by : sort,
+            key_search : key
+          })
+          break;
+        case "rating_asc" :
+          let rating_asc = orderBy(movies, ['vote_average'], ['asc']);
+          this.setState({
+            originMovies : this.state.originMovies,
+            movies : rating_asc,
+            isLoading : this.state.isLoading,
+            page : this.state.page,
+            shouldLoadMore : true,
+            current_url : this.state.current_url,
+            sort_by : sort,
+            key_search : key
+          })
+          break;
+        case "rating_desc" :
+          let rating_desc = orderBy(movies, ['vote_average'], ['desc']);
+          this.setState({
+            originMovies : this.state.originMovies,
+            movies : rating_desc,
+            isLoading : this.state.isLoading,
+            page : this.state.page,
+            shouldLoadMore : true,
+            current_url : this.state.current_url,
+            sort_by : sort,
+            key_search : key
+          })
+          break;
+        case "popularity_asc":
+          let popularity_asc = orderBy(movies, ['popularity'], ['asc']);
+          this.setState({
+            originMovies : this.state.originMovies,
+            movies : popularity_asc,
+            isLoading : this.state.isLoading,
+            page : this.state.page,
+            shouldLoadMore : true,
+            current_url : this.current_url,
+            sort_by : sort,
+            key_search : key
+          })
+          break;
+        case "popularity_desc":
+          let popularity_desc = orderBy(movies, ['popularity'], ['desc']);
+          this.setState({
+            originMovies : this.state.originMovies,
+            movies : popularity_desc,
+            isLoading : this.state.isLoading,
+            page : this.state.page,
+            shouldLoadMore : true,
+            current_url : this.state.current_url,
+            sort_by : sort,
+            key_search : key
+          })
+          break;
+        case "release_date_asc":
+          let release_date_asc = orderBy(movies, ['release_date'], ['asc']);
+          this.setState({
+            originMovies : this.state.originMovies,
+            movies : release_date_asc,
+            isLoading : this.state.isLoading,
+            page : this.state.page,
+            shouldLoadMore : true,
+            current_url : this.state.current_url,
+            sort_by : sort,
+            key_search : key
+          })
+          break;
+        case "release_date_desc":
+          let release_date_desc = orderBy(movies, ['release_date'], ['desc']);
+          this.setState({
+            originMovies : this.state.originMovies,
+            movies : release_date_desc,
+            isLoading : this.state.isLoading,
+            page : this.state.page,
+            shouldLoadMore : true,
+            current_url : this.state.current_url,
+            sort_by : sort,
+            key_search : key
+          })
+          break;
+        }
     } else {
-      this.setState({
-        originMovies : this.state.originMovies,
-        movies : movies,
-        isLoading : this.state.isLoading,
-        api_key : this.state.api_key,
-        page : "1",
-        shouldLoadMore : false
-      })
+      switch (sort){
+        case "none" :
+          this.setState({
+            originMovies : this.state.originMovies,
+            movies : movies,
+            isLoading : this.state.isLoading,
+            page : this.state.page,
+            shouldLoadMore : false,
+            current_url : this.state.current_url,
+            sort_by : sort,
+            key_search : key
+          })
+          break;
+        case "rating_asc" :
+          let rating_asc = orderBy(movies, ['vote_average'], ['asc']);
+          this.setState({
+            originMovies : this.state.originMovies,
+            movies : rating_asc,
+            isLoading : this.state.isLoading,
+            page : this.state.page,
+            shouldLoadMore : false,
+            current_url : this.state.current_url,
+            sort_by : sort,
+            key_search : key
+          })
+          break;
+        case "rating_desc" :
+          let rating_desc = orderBy(movies, ['vote_average'], ['desc']);
+          this.setState({
+            originMovies : this.state.originMovies,
+            movies : rating_desc,
+            isLoading : this.state.isLoading,
+            page : this.state.page,
+            shouldLoadMore : false,
+            current_url : this.state.current_url,
+            sort_by : sort,
+            key_search : key
+          })
+          break;
+        case "popularity_asc":
+          let popularity_asc = orderBy(movies, ['popularity'], ['asc']);
+          this.setState({
+            originMovies : this.state.originMovies,
+            movies : popularity_asc,
+            isLoading : this.state.isLoading,
+            page : this.state.page,
+            shouldLoadMore : false,
+            current_url : this.state.current_url,
+            sort_by : sort,
+            key_search : key
+          })
+          break;
+        case "popularity_desc":
+          let popularity_desc = orderBy(movies, ['popularity'], ['desc']);
+          this.setState({
+            originMovies : this.state.originMovies,
+            movies : popularity_desc,
+            isLoading : this.state.isLoading,
+            page : this.state.page,
+            shouldLoadMore : false,
+            current_url : this.state.current_url,
+            sort_by : sort,
+            key_search : key
+          })
+          break;
+        case "release_date_asc":
+          let release_date_asc = orderBy(movies, ['release_date'], ['asc']);
+          this.setState({
+            originMovies : this.state.originMovies,
+            movies : release_date_asc,
+            isLoading : this.state.isLoading,
+            page : this.state.page,
+            shouldLoadMore : false,
+            current_url : this.state.current_url,
+            sort_by : sort,
+            key_search : key
+          })
+          break;
+        case "release_date_desc":
+          let release_date_desc = orderBy(movies, ['release_date'], ['desc']);
+          this.setState({
+            originMovies : this.state.originMovies,
+            movies : release_date_desc,
+            isLoading : this.state.isLoading,
+            page : this.state.page,
+            shouldLoadMore : false,
+            current_url : this.state.current_url,
+            sort_by : sort,
+            key_search : key
+          })
+          break;
+        }
     }
   }
 }
