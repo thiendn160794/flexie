@@ -44,7 +44,7 @@ export default class MovieCard extends Component {
     render() {
         let detail = this.state.shouldShowDetail ? 
         (<Message success style = {{maxHeight : "100%"}}>
-            <Message.Body>
+            <Message.Body style={{height:'140px',overflow:'auto'}}>
                 {this.props.movie.overview}
             </Message.Body>
         </Message>) : null;
